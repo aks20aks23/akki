@@ -1,0 +1,94 @@
+[project]
+name = "leptonai"
+description = "Lepton AI Platform"
+authors = [{name = "Lepton AI Inc.", email = "dev@lepton.ai"}]
+dynamic = ["dependencies", "version"]
+readme = "README.md"
+requires-python = ">=3.8,<3.12"
+
+[project.urls]
+Homepage = "https://lepton.ai"
+
+[project.scripts]
+lep = "leptonai.cli:lep"
+
+[project.optional-dependencies]
+lint = [
+    "black==23.12.0",
+    "ruff"
+]
+test = [
+    "pytest",
+    "pytest-cov",
+    "responses",
+    "respx",
+]
+
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2,<=7.1.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "leptonai/_version.py"
+
+# add .post1.devN to last tagged version (N is the number of commits
+# since the tagged commit)
+version_scheme="no-guess-dev"
+# add git commit (and date if working dir is dirty) to the version tag
+local_scheme="node-and-date"
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+exclude = ["*tests*", "leptoninternal*", "release_scripts*", "*dockerfiles*"]
+
+[tool.setuptools.package-data]
+leptonai = ["photon/favicon.ico"]
+
+[tool.black]
+preview = true
+exclude = "_version.py"
+
+[tool.ruff]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+select = ["E", "F"]
+ignore = ["E402", "E501"]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.pytest.ini_options]
+addopts = "-v --cov=leptonai --durations=0"
+
+[tool.coverage.run]
+omit = ["*/tests/test_*.py"]
